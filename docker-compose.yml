@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+    # Laravel app service
+    app:
+        image: 'laravel-app-image'
+        build:
+            context: .
+            dockerfile: Dockerfile # Ваш Dockerfile для Laravel додатку
+        volumes:
+            - ./src:/var/www/html # Ваша директорія з кодом Laravel
+        environment:
+            - APP_NAME=Laravel
+            - APP_ENV=local
+            - APP_KEY=base64:your-app-key
+            - APP_DEBUG=true
+            - APP_URL=http://localhost
+            - DB_CONNECTION=mysql
+            - DB_HOST=db
+            - DB_PORT=3306
+            - DB_DATABASE=laravel
+            - DB_USERNAME=root
+            - DB_PASSWORD=secret
+        ports:
+            - '8000:8000' # Порт для доступу до Laravel додатку
+        depends_on:
+            - db
+
+    # MySQL service
+    db:
+        image: mysql:5.7
+        environment:
+            - MYSQL_ROOT_PASSWORD=secret
+            - MYSQL_DATABASE=laravel
+        ports:
+            - '3306:3306' # Порт для доступу до MySQL
+
+volumes:
+    db-data:
